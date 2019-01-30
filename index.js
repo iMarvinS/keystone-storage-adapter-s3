@@ -51,8 +51,9 @@ function encodeSpecialCharacters (filename) {
 // See README.md for details and usage examples.
 
 function S3Adapter (options, schema) {
-	var self = this;
-	this.options = assign({}, DEFAULT_OPTIONS, options.s3);
+  var self = this;
+
+  this.options = assign({}, DEFAULT_OPTIONS, options.s3);
 
 	// Check required options are set.
 	var requiredOptions = ['key', 'secret', 'bucket'];
@@ -73,12 +74,21 @@ function S3Adapter (options, schema) {
 	// Ensure the path has a leading "/"
 	this.options.path = ensureLeadingSlash(this.options.path);
 
-	// Create the s3 client
-	this.s3Client = new S3({
+  const clientOptions = {
 		accessKeyId: this.options.key,
 		secretAccessKey: this.options.secret,
-		region: this.options.region,
-	});
+	}
+
+  if(options.s3.region === undefined && options.s3.endpoint !== undefined) {
+    this.options.endpoint = options.s3.endpoint
+    clientOptions.endpoint = this.options.endpoint
+  }
+  else {
+    clientOptions.region = this.options.region
+  }
+
+	// Create the s3 client
+	this.s3Client = new S3(clientOptions);
 
 	// Ensure the generateFilename option takes a callback
 	this.options.generateFilename = ensureCallback(this.options.generateFilename);
