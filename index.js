@@ -93,8 +93,6 @@ function S3Adapter (options, schema) {
     }
   })
 
-  console.log(clientOptions)
-
 	// Create the s3 client
 	this.s3Client = new S3(clientOptions);
 
