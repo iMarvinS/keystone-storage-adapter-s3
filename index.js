@@ -80,12 +80,18 @@ function S3Adapter (options, schema) {
 	}
 
   if(options.s3.region === undefined && options.s3.endpoint !== undefined) {
-    this.options.endpoint = options.s3.endpoint
     clientOptions.endpoint = this.options.endpoint
   }
   else {
     clientOptions.region = this.options.region
   }
+
+  const customClientOptionKeys = ["s3ForcePathStyle", "signatureVersion"]
+  Object.keys(this.options).forEach(function (key) {
+    if(customClientOptionKeys.indexOf(key) > -1) {
+      clientOptions[key] = this.options[key]
+    }
+  })
 
 	// Create the s3 client
 	this.s3Client = new S3(clientOptions);
