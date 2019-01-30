@@ -89,9 +89,11 @@ function S3Adapter (options, schema) {
   const customClientOptionKeys = ["s3ForcePathStyle", "signatureVersion"]
   Object.keys(this.options).forEach(function (key) {
     if(customClientOptionKeys.indexOf(key) > -1) {
-      clientOptions[key] = this.options[key]
+      clientOptions[key] = self.options[key]
     }
   })
+
+  console.log(clientOptions)
 
 	// Create the s3 client
 	this.s3Client = new S3(clientOptions);
